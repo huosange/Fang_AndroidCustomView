@@ -15,22 +15,22 @@ import com.custom.fang_androidcustomview.widget.SuperDividerItemDecoration;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements BaseQuickAdapter.OnItemClickListener{
+public class MainActivity extends AppCompatActivity implements BaseQuickAdapter.OnItemClickListener {
 
     private RecyclerView recyclerView;
 
     private MainAdapter adapter;
 
-    private List<TypeBean> typeBeans=new ArrayList<>();
+    private List<TypeBean> typeBeans = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        recyclerView=findViewById(R.id.recycler_view);
+        recyclerView = findViewById(R.id.recycler_view);
 
-        adapter=new MainAdapter(getData());
+        adapter = new MainAdapter(getData());
         adapter.setOnItemClickListener(this);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.addItemDecoration(new SuperDividerItemDecoration.Builder(this)
@@ -40,19 +40,20 @@ public class MainActivity extends AppCompatActivity implements BaseQuickAdapter.
         recyclerView.setAdapter(adapter);
     }
 
-    private List<TypeBean> getData(){
+    private List<TypeBean> getData() {
         typeBeans.add(new TypeBean("吸顶效果--一行代码实现", 1));
-        typeBeans.add(new TypeBean("测试",2));
+        typeBeans.add(new TypeBean("自定义进度条", 2));
         return typeBeans;
     }
 
     @Override
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-        switch (typeBeans.get(position).getType()){
+        switch (typeBeans.get(position).getType()) {
             case 1:
-                startActivity(new Intent(MainActivity.this,HoverItemActivity.class));
+                startActivity(new Intent(MainActivity.this, HoverItemActivity.class));
                 break;
             case 2:
+                startActivity(new Intent(MainActivity.this,ProgressBarActivity.class));
                 break;
         }
     }

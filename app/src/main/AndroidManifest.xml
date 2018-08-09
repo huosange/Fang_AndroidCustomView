@@ -20,6 +20,10 @@
         <activity
             android:name=".HoverItemActivity"
             android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".ProgressBarActivity"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

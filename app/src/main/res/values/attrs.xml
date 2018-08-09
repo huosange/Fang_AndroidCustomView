@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="CircleProgressBarView">
+        <!--进度条默认宽度-->
+        <attr name="cirlceBgStrokeWidth" format="dimension" />
+        <!--进度条选中宽度-->
+        <attr name="progressStrokeWidth" format="dimension" />
+        <!--进度条默认颜色-->
+        <attr name="circleBgColor" format="color" />
+        <!--进度条选中颜色-->
+        <attr name="progressColor" format="color" />
+        <!--动画执行时间-->
+        <attr name="circleAnimationDuration" format="integer" />
+        <!--是否绘制中间文字-->
+        <attr name="isDrawCenterProgressText" format="boolean" />
+        <!--中间文字的颜色-->
+        <attr name="centerProgressTextColor" format="color" />
+        <!--中间文字的大小-->
+        <attr name="centerProgressTextSize" format="dimension" />
+    </declare-styleable>
+</resources>
