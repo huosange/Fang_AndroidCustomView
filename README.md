@@ -1,1 +1,3 @@
-# Fang_AndroidCustomView
+自定义了两种控件
+1.带首字母快速索引和首字母吸顶效果的recylclerview。
+2.圆形和线性的进度条# Fang_AndroidCustomView
