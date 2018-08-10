@@ -1,5 +1,6 @@
 package com.custom.fang_androidcustomview.widget;
 
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
@@ -10,6 +11,7 @@ import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.View;
+import android.view.animation.LinearInterpolator;
 
 import com.custom.fang_androidcustomview.R;
 
@@ -25,9 +27,19 @@ public class CircleProgressBarView extends View {
     private float currentProgress;
 
     /**
+     * 进度的属性动画
+     */
+    private ValueAnimator progressAnimation;
+
+    /**
+     * 动画延时启动时间
+     */
+    private int startDelay = 500;
+
+    /**
      * 扇形所在矩形
      */
-    private RectF rectF=new RectF();
+    private RectF rectF = new RectF();
 
     private float centerX;
     private float centerY;
@@ -102,31 +114,71 @@ public class CircleProgressBarView extends View {
         return paint;
     }
 
+    private void initAnimation() {
+        progressAnimation = ValueAnimator.ofFloat(0, mProgress);
+        progressAnimation.setDuration(circleAnimationDuration);
+        progressAnimation.setStartDelay(startDelay);
+        progressAnimation.setInterpolator(new LinearInterpolator());
+        progressAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                float value = (float) animation.getAnimatedValue();
+                mProgress = value;
+                //根据百分比，计算扇形的角度，如果mProgress为60，表示扇形角度是360度的60%
+                currentProgress = value * 360 / 100;
+
+                if (progressListener != null) {
+                    progressListener.currentProgressListener(roundTwo(value));
+                }
+                invalidate();
+            }
+        });
+    }
+
+    /**
+     * 传入一个进度值，范围是0到100，从0到progress变化
+     *
+     * @param progress
+     * @return
+     */
+    public CircleProgressBarView setProgressWithAnimation(float progress) {
+        mProgress = progress;
+        initAnimation();
+        return this;
+    }
+
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
 
-        centerX=w/2;
-        centerY=h/2;
+        centerX = w / 2;
+        centerY = h / 2;
 
-        radius=Math.min(w,h)/2-Math.max(circleBgStrokeWidth,progressStrokeWidth);
-        rectF.set(centerX-radius,centerY-radius,centerX+radius,centerY+radius);
+        radius = Math.min(w, h) / 2 - Math.max(circleBgStrokeWidth, progressStrokeWidth);
+        rectF.set(centerX - radius, centerY - radius, centerX + radius, centerY + radius);
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        canvas.drawCircle(centerX,centerY,radius,circleBgPaint);
-        canvas.drawArc(rectF,90,210,false,progressPaint);
-        if(isDrawCenterProgressText){
-            drawCenterProgressText(canvas,(int)mProgress+"%");
+        canvas.drawCircle(centerX, centerY, radius, circleBgPaint);
+        canvas.drawArc(rectF, 90, currentProgress, false, progressPaint);
+        if (isDrawCenterProgressText) {
+            drawCenterProgressText(canvas, (int) mProgress + "%");
         }
     }
 
-    private void drawCenterProgressText(Canvas canvas,String currentProgress){
-        Paint.FontMetricsInt fontMetricsInt=centerProgressTextPaint.getFontMetricsInt();
-        int baseline= (int) ((rectF.bottom+rectF.top-fontMetricsInt.top-fontMetricsInt.bottom)/2);
-        canvas.drawText("33.3%",rectF.centerX(),baseline,centerProgressTextPaint);
+    private void drawCenterProgressText(Canvas canvas, String currentProgress) {
+        Paint.FontMetricsInt fontMetricsInt = centerProgressTextPaint.getFontMetricsInt();
+        int baseline = (int) ((rectF.bottom + rectF.top - fontMetricsInt.top - fontMetricsInt.bottom) / 2);
+        canvas.drawText(currentProgress, rectF.centerX(), baseline, centerProgressTextPaint);
+    }
+
+    /**
+     * 启动动画
+     */
+    public void startProgressAnimation(){
+        progressAnimation.start();
     }
 
     /**
